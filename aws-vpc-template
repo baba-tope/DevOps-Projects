@@ -1,0 +1,197 @@
+!!!! Add prv rt, subnet associations, VPC peering and edit routes!!!
+
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": {
+        "Alpha": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": "10.20.0.0/16",
+                "EnableDnsSupport": "true",
+                "EnableDnsHostnames": "true",
+                "InstanceTenancy": "default",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "alpha-vpc"
+                    }
+                ]
+            }
+        },
+        "AlphaPublic": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "Alpha"
+                },
+                "CidrBlock": "10.20.0.0/24",
+                "AvailabilityZone": "us-east-1a",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "alpha-pub-1c"
+                    }
+                ]
+            }
+        },
+        "AlphaPrivate": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "RockIsland"
+                },
+                "CidrBlock": "10.20.1.0/24",
+                "AvailabilityZone": "us-east-1a",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "alpha-prv-1c"
+                    }
+                ]
+            }
+        },
+        "AlphaPubRT": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "Alpha"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "alpha-pub-rt"
+                    }
+                ]
+            }
+        },
+        "AlphaIGW": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "alpha-igw"
+                    }
+                ]
+            }
+        },
+        "AlphaAttachedIGW": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "Alpha"
+                },
+                "InternetGatewayId": {
+                    "Ref": "AlphaIGW"
+                }
+            }
+        },
+        "AlphaIGWRoute": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "AlphaPubRT"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "AlphaIGW"
+                }
+            }
+        },
+        "Beta": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": "10.30.0.0/16",
+                "EnableDnsSupport": "true",
+                "EnableDnsHostnames": "true",
+                "InstanceTenancy": "default",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "beta-vpc"
+                    }
+                ]
+            }
+        },
+        "BetaPublic": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "Beta"
+                },
+                "CidrBlock": "10.30.0.0/24",
+                "AvailabilityZone": "us-east-1a",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Beta-pub-1c"
+                    }
+                ]
+            }
+        },
+        "BetaPrivate": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "Beta"
+                },
+                "CidrBlock": "10.30.1.0/24",
+                "AvailabilityZone": "us-east-1a",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Beta-prv-1c"
+                    }
+                ]
+            }
+        },
+        "BetaPubRT": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "Beta"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Beta-pub-rt"
+                    }
+                ]
+            }
+        },
+        "BetaIGW": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "beta-igw"
+                    }
+                ]
+            }
+        },
+        "BetaAttachedIGW": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "Beta"
+                },
+                "InternetGatewayId": {
+                    "Ref": "BetaIGW"
+                }
+            }
+        },
+        "BetaIGWRoute": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "BetaPubRT"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "BetaIGW"
+                }
+            }
+        },
+	"
+    }
